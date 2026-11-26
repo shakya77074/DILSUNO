@@ -1,0 +1,68 @@
+name: Unzip and Build APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Unzip Uploaded Archive
+        run: |
+          ZIP_FILE=$(ls *.zip 2>/dev/null | head -n 1)
+          if [ -n "$ZIP_FILE" ]; then
+            echo "Unzipping $ZIP_FILE..."
+            unzip -o "$ZIP_FILE" -d temp_unzip
+            rm -f "$ZIP_FILE"
+            # अगर zip के अंदर एक मुख्य फोल्डर है तो उसकी फाइलें बाहर निकालें
+            SUBDIR=$(find temp_unzip -mindepth 1 -maxdepth 1 -type d)
+            COUNT=$(find temp_unzip -mindepth 1 -maxdepth 1 | wc -l)
+            if [ "$COUNT" -eq 1 ] && [ -n "$SUBDIR" ]; then
+              cp -rf "$SUBDIR"/* .
+            else
+              cp -rf temp_unzip/* .
+            fi
+            rm -rf temp_unzip
+          fi
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Node.js (For Google AI Studio / Web Projects)
+        if: hashFiles('package.json') != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Web & Add Capacitor Android
+        if: hashFiles('package.json') != ''
+        run: |
+          npm install --legacy-peer-deps
+          npm run build
+          if [ ! -d "android" ]; then
+            npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
+            npx cap init "Dil Suno" "com.dilsuno.app" --web-dir=dist || true
+            npx cap add android
+          fi
+          npx cap sync android
+
+      - name: Build Debug APK
+        run: |
+          cd android 2>/dev/null || true
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dil-Suno-APK
+          path: "**/build/outputs/apk/debug/*.apk"
