@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "879411359523",
+    "project_id": "dil-suno",
+    "storage_bucket": "dil-suno.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:879411359523:android:b564c990cd93a177c2e696",
+        "android_client_info": {
+          "package_name": "com.dilsuno.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "879411359523-tdo1q1oc4osd2mrcvlbbdnos60255jbq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dilsuno.app",
+            "certificate_hash": "d7e2c2f3d32a34e92c03ac4cde5aff83086b7d65"
+          }
+        },
+        {
+          "client_id": "879411359523-5dcscji08ieml156p34ohd4a3tqnmp5i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASsXSuxEWX6bft7s89PNdzj3ZmKyVXqfM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "879411359523-5dcscji08ieml156p34ohd4a3tqnmp5i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
